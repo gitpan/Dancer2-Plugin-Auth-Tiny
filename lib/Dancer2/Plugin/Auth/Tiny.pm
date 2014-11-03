@@ -4,7 +4,7 @@ use warnings;
 
 package Dancer2::Plugin::Auth::Tiny;
 # ABSTRACT: Require logged-in user for specified routes
-our $VERSION = '0.003'; # VERSION
+our $VERSION = '0.004';
 
 use Carp qw/croak/;
 
@@ -36,20 +36,22 @@ sub extend {
 
 sub _build_login {
     my ( $dsl, $coderef ) = @_;
+
+    $conf ||= { _default_conf(), %{ plugin_setting() } };
+
     return sub {
-        $conf ||= { _default_conf(), %{ plugin_setting() } }; # lazy
-        my $request = $dsl->app->context->request;
-        if ( $dsl->app->session( $conf->{logged_in_key} ) ) {
+        my $request = $dsl->app->request;
+        if ( $dsl->app->session->read( $conf->{logged_in_key} ) ) {
             goto $coderef;
         }
         else {
             my $params = $request->params;
             my $data =
-              { $conf->{callback_key} => $request->uri_for( $request->path, $params->{query} ) };
+              { $conf->{callback_key} => $request->uri_for( $request->path_info, $params->{query} ) };
             for my $k ( @{ $conf->{passthrough} } ) {
                 $data->{$k} = $params->{$k} if $params->{$k};
             }
-            return $dsl->app->context->redirect( $request->uri_for( $conf->{login_route}, $data ) );
+            return $dsl->app->redirect( $request->uri_for( $conf->{login_route}, $data ) );
         }
     };
 }
@@ -74,13 +76,15 @@ __END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
 Dancer2::Plugin::Auth::Tiny - Require logged-in user for specified routes
 
 =head1 VERSION
 
-version 0.003
+version 0.004
 
 =head1 SYNOPSIS
 
@@ -127,7 +131,7 @@ The code above is roughly equivalent to this:
     }
     else {
       return redirect uri_for( '/login',
-        { return_url => uri_for( request->path, request->params ) } );
+        { return_url => uri_for( request->path_info, request->params ) } );
     }
   };
 
@@ -175,11 +179,11 @@ criteria. For example, to add a check for the C<session 'is_admin'> key:
     admin => sub {
       my ($dsl, $coderef) = @_;
       return sub {
-        if ( $dsl->app->session("is_admin") ) {
+        if ( $dsl->app->session->read("is_admin") ) {
           goto $coderef;
         }
         else {
-          $dsl->app->context->redirect '/access_denied';
+          $dsl->app->redirect '/access_denied';
         }
       };
     }
@@ -200,12 +204,12 @@ You could pass additional arguments before the code reference like so:
       my $coderef = pop;
       my ($dsl, @requested_roles) = @_;
       return sub {
-        my @user_roles = @{ $dsl->app->session("roles") || [] };
+        my @user_roles = @{ $dsl->app->session->read("roles") || [] };
         if ( any_of(@requested_roles) eq any_of(@user_roles) ) {
           goto $coderef;
         }
         else {
-          $dsl->app->context->redirect '/access_denied';
+          $dsl->app->redirect '/access_denied';
         }
       };
     }
@@ -221,11 +225,11 @@ For more complex L<Dancer2> authentication, see:
 
 =item *
 
-L<Dancer2::Plugin::Auth::Extensible> -- possibly not yet ported to Dancer2
+L<Dancer2::Plugin::Auth::Extensible>
 
 =item *
 
-L<Dancer2::Plugin::Auth::RBAC> -- possibly not yet ported to Dancer2
+L<Dancer2::Plugin::Auth::RBAC> -- possibly not yet (or going to be) ported to Dancer2
 
 =back
 
@@ -239,14 +243,14 @@ L<Auth::Passphrase>
 
 =item *
 
-L<Dancer2::Plugin::Passphrase> -- possibly not yet ported to Dancer2
+L<Dancer::Plugin::Passphrase> -- possibly not yet ported to Dancer2
 
 =back
 
 =head1 ACKNOWLEDGMENTS
 
 This simplified Auth module was inspired by L<Dancer::Plugin::Auth::Extensible>
-by David Precious and discussions about its API by member of the Dancer Users
+by David Precious and discussions about its API by members of the Dancer Users
 mailing list.
 
 =for :stopwords cpan testmatrix url annocpan anno bugtracker rt cpants kwalitee diff irc mailto metadata placeholders metacpan
@@ -256,7 +260,7 @@ mailing list.
 =head2 Bugs / Feature Requests
 
 Please report any bugs or feature requests through the issue tracker
-at L<https://github.com/dagolden/dancer2-plugin-auth-tiny/issues>.
+at L<https://github.com/PerlDancer/Dancer2-Plugin-Auth-Tiny/issues>.
 You will be notified automatically of any progress on your issue.
 
 =head2 Source Code
@@ -264,17 +268,33 @@ You will be notified automatically of any progress on your issue.
 This is open source software.  The code repository is available for
 public review and contribution under the terms of the license.
 
-L<https://github.com/dagolden/dancer2-plugin-auth-tiny>
+L<https://github.com/PerlDancer/Dancer2-Plugin-Auth-Tiny>
 
-  git clone git://github.com/dagolden/dancer2-plugin-auth-tiny.git
+  git clone https://github.com/PerlDancer/Dancer2-Plugin-Auth-Tiny.git
 
-=head1 AUTHOR
+=head1 AUTHORS
+
+=over 4
+
+=item *
 
 David Golden <dagolden@cpan.org>
 
+=item *
+
+Sawyer X <xsawyerx@cpan.org>
+
+=back
+
+=head1 CONTRIBUTOR
+
+=for stopwords Pedro Melo
+
+Pedro Melo <melo@simplicidade.org>
+
 =head1 COPYRIGHT AND LICENSE
 
-This software is Copyright (c) 2012 by David Golden.
+This software is Copyright (c) 2014 by David Golden.
 
 This is free software, licensed under:
 

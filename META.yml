@@ -2,20 +2,24 @@
 abstract: 'Require logged-in user for specified routes'
 author:
   - 'David Golden <dagolden@cpan.org>'
+  - 'Sawyer X <xsawyerx@cpan.org>'
 build_requires:
-  Dancer2: 0
+  Dancer2: 0.153000
   ExtUtils::MakeMaker: 0
-  File::Find: 0
-  File::Spec::Functions: 0
+  File::Spec: 0
   File::Temp: 0.19
-  LWP::UserAgent: 0
-  List::Util: 0
+  HTTP::Cookies: 0
+  HTTP::Request: 0
+  HTTP::Request::Common: 0
+  Plack::Builder: 0
+  Plack::Test: 0
   Test::More: 0.96
-  Test::TCP: 0
+  perl: 5.008001
 configure_requires:
-  ExtUtils::MakeMaker: 6.30
+  ExtUtils::MakeMaker: 6.17
+  perl: 5.008001
 dynamic_config: 0
-generated_by: 'Dist::Zilla version 4.300030, CPAN::Meta::Converter version 2.120921'
+generated_by: 'Dist::Zilla version 5.020, CPAN::Meta::Converter version 2.142690'
 license: apache
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -32,15 +36,19 @@ no_index:
 provides:
   Dancer2::Plugin::Auth::Tiny:
     file: lib/Dancer2/Plugin/Auth/Tiny.pm
-    version: 0.003
+    version: 0.004
 requires:
   Carp: 0
+  Dancer2: 0.153000
   Dancer2::Plugin: 0
   perl: 5.008001
   strict: 0
   warnings: 0
 resources:
-  bugtracker: https://github.com/dagolden/dancer2-plugin-auth-tiny/issues
-  homepage: https://metacpan.org/release/Dancer2-Plugin-Auth-Tiny
-  repository: git://github.com/dagolden/dancer2-plugin-auth-tiny.git
-version: 0.003
+  bugtracker: https://github.com/PerlDancer/Dancer2-Plugin-Auth-Tiny/issues
+  homepage: https://github.com/PerlDancer/Dancer2-Plugin-Auth-Tiny
+  repository: https://github.com/PerlDancer/Dancer2-Plugin-Auth-Tiny.git
+version: 0.004
+x_authority: cpan:DAGOLDEN
+x_contributors:
+  - 'Pedro Melo <melo@simplicidade.org>'

@@ -1,5 +1,15 @@
 Revision history for Dancer2-Plugin-Auth-Tiny
 
+0.004     2014-11-03 19:41:23+01:00 Europe/Amsterdam
+
+0.004     2014-11-03 19:38:43+01:00 Europe/Amsterdam
+
+    [CHANGED]
+
+    - Updated to support latest Dancer2 (now requires 0.153000)
+
+    - Fixed a bug when path creation for mounted applications
+
 0.003     2013-03-06 19:16:46 America/New_York
 
     [CHANGED]

@@ -3,7 +3,7 @@ NAME
     routes
 
 VERSION
-    version 0.003
+    version 0.004
 
 SYNOPSIS
       use Dancer2::Plugin::Auth::Tiny;
@@ -48,7 +48,7 @@ DESCRIPTION
         }
         else {
           return redirect uri_for( '/login',
-            { return_url => uri_for( request->path, request->params ) } );
+            { return_url => uri_for( request->path_info, request->params ) } );
         }
       };
 
@@ -85,11 +85,11 @@ EXTENDING
         admin => sub {
           my ($dsl, $coderef) = @_;
           return sub {
-            if ( $dsl->app->session("is_admin") ) {
+            if ( $dsl->app->session->read("is_admin") ) {
               goto $coderef;
             }
             else {
-              $dsl->app->context->redirect '/access_denied';
+              $dsl->app->redirect '/access_denied';
             }
           };
         }
@@ -110,12 +110,12 @@ EXTENDING
           my $coderef = pop;
           my ($dsl, @requested_roles) = @_;
           return sub {
-            my @user_roles = @{ $dsl->app->session("roles") || [] };
+            my @user_roles = @{ $dsl->app->session->read("roles") || [] };
             if ( any_of(@requested_roles) eq any_of(@user_roles) ) {
               goto $coderef;
             }
             else {
-              $dsl->app->context->redirect '/access_denied';
+              $dsl->app->redirect '/access_denied';
             }
           };
         }
@@ -126,42 +126,47 @@ EXTENDING
 SEE ALSO
     For more complex Dancer2 authentication, see:
 
-    *   Dancer2::Plugin::Auth::Extensible -- possibly not yet ported to
-        Dancer2
+    *   Dancer2::Plugin::Auth::Extensible
 
-    *   Dancer2::Plugin::Auth::RBAC -- possibly not yet ported to Dancer2
+    *   Dancer2::Plugin::Auth::RBAC -- possibly not yet (or going to be)
+        ported to Dancer2
 
     For password authentication algorithms for your own '/login' handler,
     see:
 
     *   Auth::Passphrase
 
-    *   Dancer2::Plugin::Passphrase -- possibly not yet ported to Dancer2
+    *   Dancer::Plugin::Passphrase -- possibly not yet ported to Dancer2
 
 ACKNOWLEDGMENTS
     This simplified Auth module was inspired by
     Dancer::Plugin::Auth::Extensible by David Precious and discussions about
-    its API by member of the Dancer Users mailing list.
+    its API by members of the Dancer Users mailing list.
 
 SUPPORT
   Bugs / Feature Requests
     Please report any bugs or feature requests through the issue tracker at
-    <https://github.com/dagolden/dancer2-plugin-auth-tiny/issues>. You will
-    be notified automatically of any progress on your issue.
+    <https://github.com/PerlDancer/Dancer2-Plugin-Auth-Tiny/issues>. You
+    will be notified automatically of any progress on your issue.
 
   Source Code
     This is open source software. The code repository is available for
     public review and contribution under the terms of the license.
 
-    <https://github.com/dagolden/dancer2-plugin-auth-tiny>
+    <https://github.com/PerlDancer/Dancer2-Plugin-Auth-Tiny>
 
-      git clone git://github.com/dagolden/dancer2-plugin-auth-tiny.git
+      git clone https://github.com/PerlDancer/Dancer2-Plugin-Auth-Tiny.git
 
-AUTHOR
-    David Golden <dagolden@cpan.org>
+AUTHORS
+    *   David Golden <dagolden@cpan.org>
+
+    *   Sawyer X <xsawyerx@cpan.org>
+
+CONTRIBUTOR
+    Pedro Melo <melo@simplicidade.org>
 
 COPYRIGHT AND LICENSE
-    This software is Copyright (c) 2012 by David Golden.
+    This software is Copyright (c) 2014 by David Golden.
 
     This is free software, licensed under:
 
