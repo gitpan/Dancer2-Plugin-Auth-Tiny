@@ -3,7 +3,7 @@ NAME
     routes
 
 VERSION
-    version 0.004
+    version 0.005
 
 SYNOPSIS
       use Dancer2::Plugin::Auth::Tiny;
@@ -48,7 +48,7 @@ DESCRIPTION
         }
         else {
           return redirect uri_for( '/login',
-            { return_url => uri_for( request->path_info, request->params ) } );
+            { return_url => uri_for( request->path, request->params ) } );
         }
       };
 

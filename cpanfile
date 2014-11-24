@@ -1,12 +1,12 @@
 requires "Carp" => "0";
-requires "Dancer2" => "0.153000";
+requires "Dancer2" => "0.154000";
 requires "Dancer2::Plugin" => "0";
 requires "perl" => "5.008001";
 requires "strict" => "0";
 requires "warnings" => "0";
 
 on 'test' => sub {
-  requires "Dancer2" => "0.153000";
+  requires "Dancer2" => "0.154000";
   requires "ExtUtils::MakeMaker" => "0";
   requires "File::Spec" => "0";
   requires "File::Temp" => "0.19";
@@ -14,6 +14,7 @@ on 'test' => sub {
   requires "HTTP::Request" => "0";
   requires "HTTP::Request::Common" => "0";
   requires "Plack::Builder" => "0";
+  requires "Plack::Request" => "0";
   requires "Plack::Test" => "0";
   requires "Test::More" => "0.96";
   requires "perl" => "5.008001";
@@ -31,7 +32,7 @@ on 'configure' => sub {
 on 'develop' => sub {
   requires "Dist::Zilla" => "5";
   requires "Dist::Zilla::Plugin::Prereqs" => "0";
-  requires "Dist::Zilla::PluginBundle::DAGOLDEN" => "0.053";
+  requires "Dist::Zilla::PluginBundle::DAGOLDEN" => "0.054";
   requires "File::Spec" => "0";
   requires "File::Temp" => "0";
   requires "IO::Handle" => "0";
@@ -42,4 +43,5 @@ on 'develop' => sub {
   requires "Test::Pod" => "1.41";
   requires "Test::Pod::Coverage" => "1.08";
   requires "Test::Spelling" => "0.12";
+  requires "Test::Version" => "1";
 };
